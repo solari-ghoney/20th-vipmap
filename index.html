@@ -269,7 +269,13 @@ function applyFilter(f){
   });
   if(f!=='all' && shown===0) toast(f==='fan' ? '팬 주최 제보가 등록되면 여기에 표시돼요' : '아직 등록된 장소가 없어요');
 }
-document.querySelectorAll('.chip[data-f]').forEach(c=>c.addEventListener('click',()=>applyFilter(c.dataset.f)));
+// bind click AND touchend: some mobile browsers suppress the synthesized click over the map overlay,
+// so touchend is a reliable fallback. applyFilter is idempotent, so double-firing is harmless.
+document.querySelectorAll('.chip[data-f]').forEach(c=>{
+  const fire=(e)=>{ if(e && e.cancelable) e.preventDefault(); applyFilter(c.dataset.f); };
+  c.addEventListener('click',fire);
+  c.addEventListener('touchend',fire);
+});
 
 // Share
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
