@@ -342,24 +342,5 @@ document.getElementById('journey').addEventListener('click',e=>{ if(e.target.id=
 Object.entries(markers).forEach(([s,o])=>o.el.classList.toggle('visited', visited.has(s)));
 updateJourney();
 </script>
-
-<script>
-(function(){
-  var dbg=document.createElement('div');
-  dbg.style.cssText='position:fixed;left:6px;right:6px;bottom:6px;z-index:99999;background:rgba(0,0,0,.85);color:#3f6;font:11px/1.4 monospace;padding:8px;border-radius:8px;max-height:42vh;overflow:auto;white-space:pre-wrap;pointer-events:none;border:1px solid #3f6';
-  document.body.appendChild(dbg);
-  var n=0;
-  function log(m){ n++; dbg.textContent = (n+': '+m+'\n') + dbg.textContent; }
-  function dims(){ return [].filter.call(document.querySelectorAll('.vip-marker'),function(m){return m.classList.contains('dim');}).length; }
-  log('DEBUG READY — 콘서트 → 전시 → 전체 순서로 한 번씩 천천히 탭하세요');
-  ['pointerdown','touchstart','touchend','click'].forEach(function(type){
-    document.querySelectorAll('.chip[data-f]').forEach(function(c){
-      c.addEventListener(type,function(){ log(type+'  ['+c.dataset.f+']  dim='+dims()); },{passive:true,capture:true});
-    });
-  });
-  document.addEventListener('touchend',function(e){ var t=e.target; log('DOC touchend → target='+((t.className||t.tagName||'?')+'').slice(0,24)); },{passive:true,capture:true});
-})();
-</script>
-
 </body>
 </html>
