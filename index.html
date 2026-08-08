@@ -265,7 +265,7 @@ function applyFilter(f){
   let shown=0;
   Object.values(markers).forEach(o=>{
     const show = f==='all' || o.ev.category===f;
-    o.el.classList.toggle('dim', !show); if(show) shown++;
+    o.el.style.display = show ? '' : 'none'; if(show) shown++;   // hide non-matching markers (clearer than dimming on mobile)
   });
   if(f!=='all' && shown===0) toast(f==='fan' ? '팬 주최 제보가 등록되면 여기에 표시돼요' : '아직 등록된 장소가 없어요');
 }
