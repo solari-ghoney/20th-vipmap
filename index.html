@@ -28,11 +28,12 @@
   /* Zoom control: sit just below the top bar (under 지도 공유) with a small gap */
   .maplibregl-ctrl-top-right{margin-top:98px;margin-right:12px}
   .maplibregl-ctrl-top-right .maplibregl-ctrl button{width:34px;height:34px}
-  /* Defer to the user's global custom cursor: neutralize map/library/button cursors so it wins everywhere */
+  /* Only neutralize the MAP background cursor so the user's global custom cursor shows there.
+     Do NOT touch clickable elements — they keep cursor:pointer so the browser/extension shows
+     the normal "link" cursor on them (natural, uniform behavior). */
   .maplibregl-canvas-container.maplibregl-interactive,
   .maplibregl-canvas-container.maplibregl-interactive:active,
-  .maplibregl-canvas, .maplibregl-canvas:active,
-  .vip-marker, .chip, .btn, #card .close, #journeyPill, .jrow, #journey .jclose{cursor:inherit !important}
+  .maplibregl-canvas, .maplibregl-canvas:active{cursor:inherit !important}
 
   /* Top bar */
   /* NOTE: do NOT use pointer-events:none here — iOS/WebKit won't deliver taps to
@@ -341,9 +342,16 @@ function shareJourney(){
   shareUrl(location.origin+location.pathname, 'VIP의 다음 목적지',
     `나는 빅뱅 20주년 VIP 여정 ${total}곳 중 ${n}곳 다녀왔어요 🐾`);
 }
-document.getElementById('journeyPill').onclick=()=>{ document.getElementById('journey').classList.add('open'); renderJourney(); };
-document.querySelector('#journey .jclose').onclick=()=>document.getElementById('journey').classList.remove('open');
-document.getElementById('journey').addEventListener('click',e=>{ if(e.target.id==='journey') document.getElementById('journey').classList.remove('open'); });
+function openJourney(){ document.getElementById('journey').classList.add('open'); renderJourney(); }
+function closeJourney(){ document.getElementById('journey').classList.remove('open'); }
+document.getElementById('journeyPill').addEventListener('click', openJourney);
+(function(){
+  const jc=document.querySelector('#journey .jclose');
+  jc.addEventListener('click', closeJourney);
+  jc.addEventListener('pointerup', closeJourney);   // backup path (some setups swallow the click)
+})();
+document.getElementById('journey').addEventListener('click',e=>{ if(e.target.id==='journey') closeJourney(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeJourney(); });
 Object.entries(markers).forEach(([s,o])=>o.el.classList.toggle('visited', visited.has(s)));
 updateJourney();
 </script>
