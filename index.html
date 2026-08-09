@@ -4,8 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>VIP의 다음 목적지 · BIGBANG 20TH DESTINATION MAP</title>
-<meta property="og:title" content="VIP의 다음 목적지" />
-<meta property="og:description" content="VIP가 만든 빅뱅 20주년 콘서트·전시·팬 이벤트 맵 (내 여정 저장도 됨)" />
+<meta property="og:title" content="VIP의 다음 목적지 · BIGBANG 20TH DESTINATION MAP" />
+<meta property="og:description" content="VIP가 만든 빅뱅 20주년 콘서트·전시·팬 이벤트 지도. 예약·길찾기·내가 다녀온 곳 저장까지" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://20th-vipmap.vercel.app/" />
 <meta property="og:image" content="https://20th-vipmap.vercel.app/og-image.jpg" />
@@ -279,10 +279,9 @@ document.querySelectorAll('.chip[data-f]').forEach(c=>{
 
 // Share
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
-async function shareUrl(url,title,text){
-  if(navigator.share){try{await navigator.share(text?{title,text,url}:{title,url});return;}catch(e){}}
-  const payload = text ? (text+'\n'+url) : url;
-  try{await navigator.clipboard.writeText(payload);toast('복사했어요');}catch(e){prompt('복사',payload);}
+async function shareUrl(url,title){
+  if(navigator.share){try{await navigator.share({title,url});return;}catch(e){}}
+  try{await navigator.clipboard.writeText(url);toast('링크를 복사했어요');}catch(e){prompt('링크 복사',url);}
 }
 function sharePlace(slug){const {ev}=markers[slug];shareUrl(location.origin+location.pathname+'?event='+slug,'VIP의 다음 목적지 · '+ev.title.ko);}
 document.getElementById('sharemap').onclick=()=>shareUrl(location.origin+location.pathname,'VIP의 다음 목적지 · BIGBANG 20TH DESTINATION MAP');
@@ -335,8 +334,7 @@ function renderJourney(){
 }
 function shareJourney(){
   const total=EVENTS.events.length, n=[...visited].filter(s=>markers[s]).length;
-  shareUrl(location.origin+location.pathname, 'VIP의 다음 목적지',
-    `나는 빅뱅 20주년 VIP 여정 ${total}곳 중 ${n}곳 다녀왔어요 🐾`);
+  shareUrl(location.origin+location.pathname, `나의 빅뱅 20주년 VIP 여정 — ${total}곳 중 ${n}곳 다녀옴`);
 }
 document.getElementById('journeyPill').onclick=()=>{ document.getElementById('journey').classList.add('open'); renderJourney(); };
 document.querySelector('#journey .jclose').onclick=()=>document.getElementById('journey').classList.remove('open');
