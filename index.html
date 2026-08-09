@@ -195,7 +195,7 @@ EVENTS.events.forEach(ev=>{
   el.style.backgroundImage=`url(${MARKER_URI})`;
   el.dataset.cat=ev.category;
   el.addEventListener('click',(e)=>{e.stopPropagation();openCard(ev.slug,true);});
-  const m = new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([ev.lng,ev.lat]).addTo(map);
+  const m = new maplibregl.Marker({element:el,anchor:'center'}).setLngLat([ev.lng,ev.lat]).addTo(map);
   markers[ev.slug]={marker:m,el:el,ev:ev};
   bounds.extend([ev.lng,ev.lat]);
 });
